@@ -3,14 +3,15 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
 require("dotenv").config();
-const { MongoClient } = require('mongodb');
+
+const { MongoClient}  = require('mongodb');
+
+var {ObjectId} = require('mongodb');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-let ObjectId = require("mongodb").ObjectID;
 
 
 const uri = "mongodb+srv://nodemongo:modemongo@cluster0.vewnd.mongodb.net/nrjPhotography?retryWrites=true&w=majority";
@@ -57,13 +58,11 @@ client.connect(err => {
   // change service status 
 
    app.put('/change-status', (req, res) => {
+    console.log(req.body);
     const status = req.body.status;
     const id = req.body._id;
-    // console.log(id);
-    orderCollection.updateOne(
-      {_id: ObjectId(id)},
-      {$set: {status: status}}
-      )
+    
+      orderCollection.updateOne({_id: ObjectId(id)},{$set: {status: status}})
     .then(result => {
       res.send(result.modifiedCount > 0)
     })
